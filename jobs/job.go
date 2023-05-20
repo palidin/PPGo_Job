@@ -359,7 +359,7 @@ func RemoteCommandJobByPassword(id int, serverId int, name string, command strin
 			} else if errcode == "" {
 				jobresult.ErrMsg = errmsg
 			} else {
-				jobresult.ErrMsg = errcode + " " + errmsg
+				jobresult.ErrMsg = errcode + "\n" + errmsg
 			}
 			jobresult.OutMsg = b.String()
 			jobresult.IsOk = false
@@ -726,8 +726,11 @@ func (j *Job) Run() {
 
 			taskOutput = strings.Replace(log.Output, "\n", " ", -1)
 			taskOutput = strings.Replace(taskOutput, "\"", "\\\"", -1)
-			errOutput = strings.Replace(log.Error, "\n", " ", -1)
-			errOutput = strings.Replace(errOutput, "\"", "\\\"", -1)
+
+			errOutput = fmt.Sprintf("%q", errOutput)
+			errOutput = fmt.Sprint(errOutput[1:len(errOutput)-1])
+			
+			// beego.Debug(fmt.Sprintf("%s", errOutput))
 
 			if title != "" {
 				title = strings.Replace(title, "{{TaskId}}", strconv.Itoa(j.Task.Id), -1)
