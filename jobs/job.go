@@ -352,7 +352,15 @@ func RemoteCommandJobByPassword(id int, serverId int, name string, command strin
 		session.Stderr = &c
 		//session.Output(command)
 		if err := session.Run(command); err != nil {
-			jobresult.ErrMsg = ""+ err.Error()
+			errcode := err.Error()
+			errmsg := c.String()
+			if errmsg == "" {
+				jobresult.ErrMsg = errcode
+			} else if errcode == "" {
+				jobresult.ErrMsg = errmsg
+			} else {
+				jobresult.ErrMsg = errcode + "\r\n" + errmsg
+			}
 			jobresult.OutMsg = b.String()
 			jobresult.IsOk = false
 			return
