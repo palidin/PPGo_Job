@@ -727,11 +727,9 @@ func (j *Job) Run() {
 			taskOutput = strings.Replace(log.Output, "\n", " ", -1)
 			taskOutput = strings.Replace(taskOutput, "\"", "\\\"", -1)
 
-			errOutput = fmt.Sprintf("%q", errOutput)
+			errOutput = fmt.Sprintf("%q", log.Error)
 			errOutput = fmt.Sprint(errOutput[1:len(errOutput)-1])
 			
-			// beego.Debug(fmt.Sprintf("%s", errOutput))
-
 			if title != "" {
 				title = strings.Replace(title, "{{TaskId}}", strconv.Itoa(j.Task.Id), -1)
 				title = strings.Replace(title, "{{ServerId}}", strconv.Itoa(j.ServerId), -1)
