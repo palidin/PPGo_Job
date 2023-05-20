@@ -359,7 +359,7 @@ func RemoteCommandJobByPassword(id int, serverId int, name string, command strin
 			} else if errcode == "" {
 				jobresult.ErrMsg = errmsg
 			} else {
-				jobresult.ErrMsg = errcode + "\\n" + errmsg
+				jobresult.ErrMsg = errcode + " " + errmsg
 			}
 			jobresult.OutMsg = b.String()
 			jobresult.IsOk = false
