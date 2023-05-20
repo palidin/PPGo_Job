@@ -352,7 +352,10 @@ func RemoteCommandJobByPassword(id int, serverId int, name string, command strin
 		session.Stderr = &c
 		//session.Output(command)
 		if err := session.Run(command); err != nil {
+			jobresult.ErrMsg = ""+ err.Error()
+			jobresult.OutMsg = b.String()
 			jobresult.IsOk = false
+			return
 		}
 		jobresult.OutMsg = b.String()
 		jobresult.ErrMsg = c.String()
@@ -657,13 +660,15 @@ func (j *Job) Run() {
 	log.Error = jobResult.ErrMsg
 	log.ProcessTime = int(ut)
 	log.CreateTime = t.Unix()
-
+	
+	// beego.Debug(fmt.Sprintf("%s-%s", jobResult.ErrMsg, jobResult.OutMsg))
+	
 	if jobResult.IsTimeout {
 		log.Status = models.TASK_TIMEOUT
 		log.Error = fmt.Sprintf("任务执行超过 %d 秒\n----------------------\n%s\n", int(timeout/time.Second), jobResult.ErrMsg)
 	} else if !jobResult.IsOk {
 		log.Status = models.TASK_ERROR
-		log.Error = "ERROR:" + jobResult.ErrMsg
+		log.Error = "ERROR: " + jobResult.ErrMsg
 	}
 
 	if log.Status < 0 && j.Task.IsNotify == 1 {
